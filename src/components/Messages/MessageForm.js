@@ -11,7 +11,7 @@ class MessageForm extends React.Component {
         user: this.props.currentUser,
         loading: false,
         errors: [],
-        modals: false,
+        modal: false,
     };
 
     openModal = () => this.setState({ modal: true });
@@ -64,6 +64,10 @@ class MessageForm extends React.Component {
         }
     };
 
+    uploadFile = (file, metadata) => {
+        console.log(file, metadata);
+    };
+
     render() {
         const {errors, message, loading, modal} = this.state;
 
@@ -101,6 +105,7 @@ class MessageForm extends React.Component {
                     <FileModal
                         modal={modal}
                         closeModal={this.closeModal}
+                        uploadFile={this.uploadFile}
                     />
                 </Button.Group>
             </Segment>
