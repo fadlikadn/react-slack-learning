@@ -2,11 +2,14 @@ import React from 'react';
 import {Grid, Header, Icon, Dropdown, Image, Modal, Input, Button} from 'semantic-ui-react';
 import firebase from "../../firebase";
 import { connect } from 'react-redux';
+// import AvatarEditor from "react-avatar-editor/src";
+import preview from "emoji-mart/dist-modern/components/preview";
 
 class UserPanel extends React.Component {
     state = {
         user: this.props.currentUser,
         modal: false,
+        previewImage: ''
     };
 
     openModal = () => this.setState({modal: true});
@@ -39,13 +42,25 @@ class UserPanel extends React.Component {
         {
             key: "avatar",
             text: <span onClick={this.openModal}>Change Avatar </span>,
-            disabled: true
+            // disabled: true
         },
         {
             key: "signout",
             text: <span onClick={this.handleSignout}>Sign Out</span>
         }
     ];
+
+    handleChange = event => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        if (file) {
+            reader.readAsDataURL(file);
+            reader.addEventListener('load', () => {
+                this.setState({ previewImage: reader.result });
+            });
+        }
+    }
 
     handleSignout = () => {
         firebase
@@ -57,7 +72,7 @@ class UserPanel extends React.Component {
     render() {
         // console.log(this.props.currentUser);
         console.log(this.state.user);
-        const { user, modal } =  this.state;
+        const { user, modal, previewImage } =  this.state;
         const { primaryColor } = this.props;
 
         return (
@@ -88,6 +103,7 @@ class UserPanel extends React.Component {
                         <Modal.Header>Change Avatar</Modal.Header>
                         <Modal.Content>
                             <Input
+                                onChange={this.handleChange}
                                 fluid
                                 type="file"
                                 label="New Avatar"
@@ -96,7 +112,15 @@ class UserPanel extends React.Component {
                             <Grid centered stackable columns={2}>
                                 <Grid.Row centered>
                                     <Grid.Column className="ui center aligned grid">
-                                        {/*Image Preview*/}
+                                        {/*{previewImage && (
+                                            <AvatarEditor
+                                                image={previewImage}
+                                                width={120}
+                                                height={120}
+                                                border={50}
+                                                scale={1.2}
+                                            />
+                                        )}*/}
                                     </Grid.Column>
                                     <Grid.Column>
                                         {/*Cropped Image Preview*/}
