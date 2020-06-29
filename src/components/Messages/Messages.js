@@ -6,6 +6,7 @@ import { Segment, Comment } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { setUserPosts } from "../../actions";
 import firebase from '../../firebase';
+import Typing from "./Typing";
 
 class Messages extends React.Component {
     state = {
@@ -200,7 +201,12 @@ class Messages extends React.Component {
                     <Comment.Group className={progressBar ? 'messages__progress' : 'messages'}>
                         {/*Messages*/}
                         {/*{this.displayMessages(messages)}*/}
-                        { searchTerm ? this.displayMessages(searchResults) : this.displayMessages(messages)}
+                        { searchTerm
+                            ? this.displayMessages(searchResults)
+                            : this.displayMessages(messages)}
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <span className="user__typing">douglas is typing</span> <Typing/>
+                            </div>
                     </Comment.Group>
                 </Segment>
 
