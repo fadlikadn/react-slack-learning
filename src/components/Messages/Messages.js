@@ -3,6 +3,8 @@ import MessagesHeader from "./MessagesHeader";
 import MessageForm from "./MessageForm";
 import Message from "./Message";
 import { Segment, Comment } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { setUserPosts } from "../../actions";
 import firebase from '../../firebase';
 
 class Messages extends React.Component {
@@ -41,12 +43,13 @@ class Messages extends React.Component {
         const ref = this.getMessagesRef();
         ref.child(channelId).on('child_added', snap => {
             loadedMessages.push(snap.val());
-            console.log(loadedMessages);
+            // console.log(loadedMessages);
             this.setState({
                 messages: loadedMessages,
                 messagesLoading: false,
             });
             this.countUniqueUsers(loadedMessages);
+            this.countUserPosts(loadedMessages);
         });
     };
 
@@ -137,6 +140,21 @@ class Messages extends React.Component {
 
     };
 
+    countUserPosts = messages => {
+        let userPosts = messages.reduce((acc, message) => {
+            if (message.user.name in acc) {
+                acc[message.user.name].count += 1;
+            } else {
+                acc[message.user.name] = {
+                    avatar: message.user.avatar,
+                    count: 1
+                }
+            }
+            return acc;
+        }, {});
+        this.props.setUserPosts(userPosts);
+    }
+
     displayMessages = messages => (
         messages.length > 0 && messages.map(message => (
             <Message
@@ -199,4 +217,7 @@ class Messages extends React.Component {
     }
 }
 
-export default Messages;
+export default connect(
+    null,
+    { setUserPosts }
+)(Messages);
