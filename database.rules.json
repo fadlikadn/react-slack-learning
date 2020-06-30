@@ -22,7 +22,7 @@
         ".validate": "root.child('channels/'+$channelId).exists()",
         "$messageId": {
           ".write": "auth != null",
-          ".validate": "(newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
+          ".validate": "(newData.hasChildren(['content', 'user', 'timestamp']) && !newData.hasChildren(['image'])) || (newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
           "content": {
             ".validate": "newData.val().length > 0"
           },
@@ -41,7 +41,7 @@
           ".read": "auth != null && ($uid1 === auth.uid || $uid2 === auth.uid)",
           "$messageId": {
             ".write": "auth != null",
-            ".validate": "(newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
+            ".validate": "(newData.hasChildren(['content', 'user', 'timestamp']) && !newData.hasChildren(['image'])) || (newData.hasChildren(['image', 'user', 'timestamp']) && !newData.hasChildren(['content']))",
             "content": {
               ".validate": "newData.val().length > 0"
             },
@@ -57,11 +57,11 @@
     },
     "presence": {
       ".read": "auth != null",
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "typing": {
       ".read": "auth != null",
-      ".write": "auth != null",
+      ".write": "auth != null"
     },
     "users": {
       ".read": "auth != null",
